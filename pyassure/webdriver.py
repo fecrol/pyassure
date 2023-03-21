@@ -66,6 +66,9 @@ class Webdriver:
     def __set_driver(self):
         """
         Set the driver to the approporiate webdriver instances. Chrome is used as the default webdriver
+
+        :returns: a webdriver instance
+        :rtype: Chrome or Firefox or Edge
         """
 
         driver_type = self.__pyassure_config.get("webdriver").get("driver")
@@ -74,18 +77,44 @@ class Webdriver:
         driver_options = self.__get_driver_options(driver_type)
 
         if driver_type == "chrome":
-            self.__driver = webdriver.Chrome(options=driver_options, service=ChromeService(ChromeDriverManager().install()))
+            driver = webdriver.Chrome(options=driver_options, service=ChromeService(ChromeDriverManager().install()))
         if driver_type == "firefox":
-            self.__driver = webdriver.Firefox(options=driver_options, service=FirefoxService(GeckoDriverManager().install()))
+            driver = webdriver.Firefox(options=driver_options, service=FirefoxService(GeckoDriverManager().install()))
         if driver_type == "edge":
-            self.__driver = webdriver.Edge(options=driver_options, service=EdgeService(EdgeChromiumDriverManager().install()))
+            driver = webdriver.Edge(options=driver_options, service=EdgeService(EdgeChromiumDriverManager().install()))
+        
+        return driver
     
     def start(self):
-        self.__set_driver()
+        """
+        Start a new webdriver instance if one is not started already
+        """
+
+        if self.__driver is None:
+            self.__driver = self.__set_driver()
     
-    def stop(self):
+    def open(self, url=None):
+        """
+        Start a webdriver instance and open a url which can either be specified in the pyassure.config.json file, or passed in as a parameter
+
+        :param url: url to navigate to (optional)
+        :type url: str
+        """
+
+        baseUrl = self.__pyassure_config.get("webdriver").get("baseUrl") if url is None else url
+
+        if baseUrl is None:
+            raise Exception("No url provided. Please add a baseUrl field in pyassure.config.json, or pass a url as a parameter to the open() method!")
+
+        self.__driver.get(baseUrl)
+    
+    def quit(self):
         self.__driver.quit()
+        self.__driver = None
     
-    def opne(self):
-        self.__driver.get("https://www.saucedemo.com/")
+    def get_driver(self):
+        return self.__driver
+
+driver = Webdriver()
+driver.start()
         
