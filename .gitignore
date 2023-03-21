@@ -3,3 +3,5 @@ __pycache__
 *.log
 app.py
 pyassure.config.json
+requirements.txt
+login_page.py
