@@ -1,4 +1,3 @@
-import os
 from pyassure.config.pyassure_config import pyassure_config
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -85,9 +84,9 @@ class Webdriver:
         
         return driver
     
-    def start(self):
+    def __start(self):
         """
-        Start a new webdriver instance if one is not started already
+        Start a new webdriver instance if one is not already started
         """
 
         if self.__driver is None:
@@ -106,6 +105,7 @@ class Webdriver:
         if baseUrl is None:
             raise Exception("No url provided. Please add a baseUrl field in pyassure.config.json, or pass a url as a parameter to the open() method!")
 
+        self.__start()
         self.__driver.get(baseUrl)
     
     def quit(self):
@@ -114,7 +114,4 @@ class Webdriver:
     
     def get_driver(self):
         return self.__driver
-
-driver = Webdriver()
-driver.start()
         
