@@ -4,4 +4,4 @@ __pycache__
 app.py
 pyassure.config.json
 requirements.txt
-login_page.py
+*_page.py
