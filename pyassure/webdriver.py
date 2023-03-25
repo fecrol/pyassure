@@ -114,4 +114,6 @@ class Webdriver:
     
     def get_driver(self):
         return self.__driver
+
+driver = Webdriver()
         
