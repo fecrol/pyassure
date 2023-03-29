@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import *
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.remote.webelement import WebElement
 
 class PageObject():
 
@@ -25,7 +26,7 @@ class PageObject():
         self.__explicit_timeout = 10
         self.__implicit_timeout = 0
 
-    def __getattr__(self, locator):
+    def __getattr__(self, locator:tuple[str]):
 
         try:
             if locator in self.find_by.keys():
@@ -68,7 +69,7 @@ class PageObject():
     def get_driver(self):
         return self.__driver.get_driver()
     
-    def __get_web_element(self, locator):
+    def __get_web_element(self, locator:tuple[str]):
         """
         Return a WebElement located by a locator type and locator
 
@@ -81,7 +82,7 @@ class PageObject():
         element = self.get_driver().find_element(*locator)
         return element
     
-    def __get_web_elements(self, locator):
+    def __get_web_elements(self, locator:tuple[str]):
         """
         Return a list of WebElements located by a locator type and locator
 
@@ -94,7 +95,7 @@ class PageObject():
         elements = self.get_driver().find_elements(*locator)
         return elements
     
-    def __element_not_present(self, webelement):
+    def __element_not_present(self, webelement:WebElement):
         """
         Custom expected condition to check if element is no longer present on the screen
         """
@@ -107,25 +108,25 @@ class PageObject():
         
         return predicate
     
-    def open(self, url=None):
+    def open(self, url:str=None):
         self.__driver.open(url)
     
     def quit(self):
         self.__driver.quit()
     
-    def click_on(self, webelement):
+    def click_on(self, webelement:WebElement):
         webelement.click()
     
-    def right_click_on(self, webelement):
+    def right_click_on(self, webelement:WebElement):
         ActionChains(self.get_driver()).context_click(webelement).perform()
 
-    def type_into(self, webelement, string):
+    def type_into(self, webelement:WebElement, string:str):
         webelement.send_keys(string)
     
     def clear(self, webelement):
         webelement.clear()
 
-    def get_text(self, webelement=None, webelements=None):
+    def get_text(self, webelement:WebElement=None, webelements:list[WebElement]=None):
         """
         :param: webelement: A WebElement from which the text is to be extracted
         :type: WebElement
@@ -143,44 +144,44 @@ class PageObject():
 
         return webelement.text
     
-    def select_element_by_text(self, webelement,text):
+    def select_element_by_text(self, webelement:WebElement, text:str):
         select = Select(webelement)
         select.select_by_visible_text(text)
 
-    def select_element_by_index(self, webelement, index):
+    def select_element_by_index(self, webelement:WebElement, index:int):
         select = Select(webelement)
         select.select_by_index(index)
     
-    def select_element_by_value(self, webelement, value):
+    def select_element_by_value(self, webelement:WebElement, value:str):
         select = Select(webelement)
         select.select_by_value(value)
     
-    def wait_until_present(self, webelement):
+    def wait_until_present(self, webelement:WebElement):
         return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
             ec.presence_of_element_located(webelement.locator)
         )
 
-    def wait_until_visible(self, webelement):
+    def wait_until_visible(self, webelement:WebElement):
         return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
             ec.visibility_of(webelement)
         )
 
-    def wait_until_clickable(self, webelement):
+    def wait_until_clickable(self, webelement:WebElement):
         return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
             ec.element_to_be_clickable(webelement)
         )
 
-    def wait_until_not_present(self, webelement):
+    def wait_until_not_present(self, webelement:WebElement):
         return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
             self.__element_not_present(webelement)
         )
 
-    def wait_until_not_visible(self, webelement):
+    def wait_until_not_visible(self, webelement:WebElement):
         return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
             ec.invisibility_of_element(webelement)
         )
 
-    def wait_for_staleness_of(self, webelement):
+    def wait_for_staleness_of(self, webelement:WebElement):
         return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
             ec.staleness_of(webelement)
         )

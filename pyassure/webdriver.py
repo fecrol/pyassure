@@ -20,7 +20,7 @@ class Webdriver:
 
         self.__driver = None
     
-    def __set_driver_options(self, driver_type):
+    def __set_driver_options(self, driver_type:str):
         """
         Return approporiate driver options object based on the driver type
 
@@ -39,7 +39,7 @@ class Webdriver:
         
         return driver_options
 
-    def __get_driver_options(self, driver_type):
+    def __get_driver_options(self, driver_type:str):
         """
         Return driver options object with driver options from config file added
 
@@ -92,7 +92,7 @@ class Webdriver:
         if self.__driver is None:
             self.__driver = self.__set_driver()
     
-    def open(self, url=None):
+    def open(self, url:str=None):
         """
         Start a webdriver instance and open a url which can either be specified in the pyassure.config.json file, or passed in as a parameter
 
@@ -116,4 +116,3 @@ class Webdriver:
         return self.__driver
 
 driver = Webdriver()
-        
