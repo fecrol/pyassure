@@ -114,6 +114,9 @@ class PageObject():
     def quit(self):
         self.__driver.quit()
     
+    def get_current_url(self):
+        return self.__driver.get_current_url()
+    
     def click_on(self, webelement:WebElement):
         webelement.click()
     
