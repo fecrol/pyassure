@@ -1,0 +1,31 @@
+{
+    "webdriver": {
+        "baseUrl": "https://www.saucedemo.com/",
+        "driver": "chrome",
+        "headless": "false",
+        "chromeOptions": [
+            "start-maximized", 
+            "test-type", 
+            "no-sandbox", 
+            "ignore-certificate-errors",
+            "disable-popup-blocking", 
+            "disable-default-apps", 
+            "disable-extensions-file-access-check",
+            "incognito", 
+            "disable-infobars", 
+            "disable-gpu"
+        ],
+        "edgeOptions": [
+            "start-maximized", 
+            "test-type", 
+            "no-sandbox", 
+            "ignore-certificate-errors",
+            "disable-popup-blocking", 
+            "disable-default-apps", 
+            "disable-extensions-file-access-check",
+            "inprivate", 
+            "disable-infobars", 
+            "disable-gpu"
+        ]
+    }
+}
