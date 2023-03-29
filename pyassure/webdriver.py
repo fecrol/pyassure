@@ -51,11 +51,8 @@ class Webdriver:
 
         list_of_options = self.__pyassure_config.get("webdriver").get(self.__possible_driver_options.get(driver_type))
         list_of_options = [] if list_of_options is None else list_of_options
-        headless_mode = self.__pyassure_config.get("webdriver").get("headless")
-        headless_mode = False if headless_mode not in self.__possible_headless_values or headless_mode == "false" else True
 
         driver_options = self.__set_driver_options(driver_type)
-        driver_options.headless = headless_mode
 
         for option in list_of_options:
             driver_options.add_argument(option)
@@ -114,5 +111,8 @@ class Webdriver:
     
     def get_driver(self):
         return self.__driver
+    
+    def get_current_url(self):
+        return self.__driver.current_url
 
 driver = Webdriver()
