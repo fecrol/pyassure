@@ -185,3 +185,8 @@ class PageObject():
         return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
             ec.staleness_of(webelement)
         )
+
+class PageComponent(PageObject):
+
+    def __init__(self):
+        super().__init__()
