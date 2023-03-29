@@ -1,6 +1,5 @@
 venv
 __pycache__
+.pytest_cache
 *.log
 app.py
-pyassure.config.json
-*_page.py
