@@ -5,7 +5,8 @@ class SwagLabsLoginPage(PageObject):
     find_by = {
         "username_field": ("id", "user-name"),
         "password_field": ("id", "password"),
-        "login_btn": ("css", "input[data-test='login-button']")
+        "login_btn": ("css", "input[data-test='login-button']"),
+        "credentials": ("id", "login_credentials")
     }
 
     def input_username(self, username:str):
@@ -24,3 +25,13 @@ class SwagLabsLoginPage(PageObject):
         self.input_username(username)
         self.input_password(password)
         self.click_login_btn()
+    
+    def get_username_field_value(self):
+        return self.username_field.get_attribute("value")
+    
+    def clear_username_field(self):
+        self.clear(self.username_field)
+    
+    def get_login_credentials_text(self):
+        self.wait_until_visible(self.credentials)
+        return self.get_text(self.credentials)
