@@ -188,6 +188,62 @@ class PageObject():
         return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
             ec.staleness_of(webelement)
         )
+    
+    def __get_locator(self, class_name:str, css:str, id:str, name:str, link_text:str, partial_link_text:str, tag:str, xpath:str):
+        num_of_locators_provided = 0
+        
+        locators = {
+            "class_name": class_name,
+            "css": css,
+            "id": id,
+            "name": name,
+            "link_text": link_text,
+            "partial_link_text": partial_link_text,
+            "tag": tag,
+            "xpath": xpath
+        }
+
+        for locator_type, locator in locators.items():
+            if locator != None:
+                num_of_locators_provided += 1
+        
+        if num_of_locators_provided == 0:
+            raise Exception("No locator provided. Please provide a locator")
+        if num_of_locators_provided > 1:
+            raise Exception("Too many locators provided. Please provide a single locator")
+        
+        for locator_type, locator in locators.items():
+            if locator != None:
+                return (self.LOCATOR_TYPES.get(locator_type), locator)
+    
+    def find_element_by(self, class_name:str=None, css:str=None, id:str=None, name:str=None, link_text:str=None, partial_link_text:str=None, tag:str=None, xpath:str=None):
+        loc = loc = self.__get_locator(class_name, css, id, name, link_text, partial_link_text, tag, xpath)
+
+        try:
+            WebDriverWait(self.get_driver(), self.__timeout).until(ec.presence_of_element_located(loc))
+            WebDriverWait(self.get_driver(), self.__timeout).until(ec.visibility_of_element_located(loc))
+        except (StaleElementReferenceException, NoSuchElementException, TimeoutException) as err:
+            raise Exception(
+                    f"{type(err).__name__} occured when trying to locate element"
+                )
+        
+        element = self.__get_web_element(loc)
+        return element
+
+    def find_elements_by(self, class_name:str=None, css:str=None, id:str=None, name:str=None, link_text:str=None, partial_link_text:str=None, tag:str=None, xpath:str=None):
+        
+        loc = self.__get_locator(class_name, css, id, name, link_text, partial_link_text, tag, xpath)
+
+        try:
+            WebDriverWait(self.get_driver(), self.__timeout).until(ec.presence_of_element_located(loc))
+            WebDriverWait(self.get_driver(), self.__timeout).until(ec.visibility_of_element_located(loc))
+        except (StaleElementReferenceException, NoSuchElementException, TimeoutException) as err:
+            raise Exception(
+                    f"{type(err).__name__} occured when trying to locate element"
+                )
+        
+        elements = self.__get_web_elements(loc)
+        return elements
 
 class PageComponent(PageObject):
 
