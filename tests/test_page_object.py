@@ -61,3 +61,32 @@ def test_get_text():
 
     login_page.quit()
 
+def test_find_elements_by_class_name():
+    url_to_open = "https://www.saucedemo.com/"
+    login_page = SwagLabsLoginPage()
+    login_page.open(url_to_open)
+
+    elements = login_page.find_elements_by(class_name="login_logo")
+    assert len(elements) > 0
+
+    login_page.quit()
+
+def test_find_elements_by_css():
+    url_to_open = "https://www.saucedemo.com/"
+    login_page = SwagLabsLoginPage()
+    login_page.open(url_to_open)
+
+    elements = login_page.find_elements_by(css=".login_wrapper")
+    assert len(elements) > 0
+
+    login_page.quit()
+
+def test_find_elements_by_id():
+    url_to_open = "https://www.saucedemo.com/"
+    login_page = SwagLabsLoginPage()
+    login_page.open(url_to_open)
+
+    elements = login_page.find_elements_by(id="login-button")
+    assert len(elements) > 0
+
+    login_page.quit()
