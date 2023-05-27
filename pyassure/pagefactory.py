@@ -1,4 +1,3 @@
-from pyassure.webdriver import driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -8,6 +7,9 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.remote.webelement import WebElement
 
 class PageObject():
+
+    timeout = 5
+    explicit_timeout = 10
 
     LOCATOR_TYPES = {
         "class_name": By.CLASS_NAME,
@@ -20,11 +22,8 @@ class PageObject():
         "xpath": By.XPATH
     }
 
-    def __init__(self):
-        self.__driver = driver
-        self.__timeout = 5
-        self.__explicit_timeout = 10
-        self.__implicit_timeout = 0
+    def __get__(self, instance, owner):
+        self.driver = instance.driver
 
     def __getattr__(self, locator:tuple[str]):
 
@@ -33,8 +32,8 @@ class PageObject():
                 loc = (self.LOCATOR_TYPES.get(self.find_by.get(locator)[0]), self.find_by.get(locator)[1])
 
                 try:
-                    WebDriverWait(self.get_driver(), self.__timeout).until(ec.presence_of_element_located(loc))
-                    WebDriverWait(self.get_driver(), self.__timeout).until(ec.visibility_of_element_located(loc))
+                    WebDriverWait(self.get_driver(), self.timeout).until(ec.presence_of_element_located(loc))
+                    WebDriverWait(self.get_driver(), self.timeout).until(ec.visibility_of_element_located(loc))
                 except (StaleElementReferenceException, NoSuchElementException, TimeoutException) as err:
                     raise Exception(
                         f"{type(err).__name__} occured when trying to locate {locator} by {self.find_by.get(locator)[0].upper()} {self.find_by.get(locator)[1]}"
@@ -51,8 +50,8 @@ class PageObject():
                 loc = (self.LOCATOR_TYPES.get(self.find_all.get(locator)[0]), self.find_all.get(locator)[1])
 
                 try:
-                    WebDriverWait(self.get_driver(), self.__timeout).until(ec.presence_of_element_located(loc))
-                    WebDriverWait(self.get_driver(), self.__timeout).until(ec.visibility_of_element_located(loc))
+                    WebDriverWait(self.get_driver(), self.timeout).until(ec.presence_of_element_located(loc))
+                    WebDriverWait(self.get_driver(), self.timeout).until(ec.visibility_of_element_located(loc))
                 except (StaleElementReferenceException, NoSuchElementException, TimeoutException) as err:
                     raise Exception(
                         f"{type(err).__name__} occured when trying to locate {locator} by {self.find_all.get(locator)[0].upper()} {self.find_all.get(locator)[1]}"
@@ -67,7 +66,7 @@ class PageObject():
             pass
     
     def get_driver(self):
-        return self.__driver.get_driver()
+        return self.driver.get_driver()
     
     def __get_web_element(self, locator:tuple[str]):
         """
@@ -108,14 +107,11 @@ class PageObject():
         
         return predicate
     
-    def open(self, url:str=None):
-        self.__driver.open(url)
-    
-    def quit(self):
-        self.__driver.quit()
+    def open(self, **kwargs):
+        self.driver.open(kwargs.get("url"))
     
     def get_current_url(self):
-        return self.__driver.get_current_url()
+        return self.driver.get_current_url()
     
     def click_on(self, webelement:WebElement):
         webelement.click()
@@ -160,32 +156,32 @@ class PageObject():
         select.select_by_value(value)
     
     def wait_until_present(self, webelement:WebElement):
-        return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
+        return WebDriverWait(self.get_driver(), self.explicit_timeout).until(
             ec.presence_of_element_located(webelement.locator)
         )
 
     def wait_until_visible(self, webelement:WebElement):
-        return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
+        return WebDriverWait(self.get_driver(), self.explicit_timeout).until(
             ec.visibility_of(webelement)
         )
 
     def wait_until_clickable(self, webelement:WebElement):
-        return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
+        return WebDriverWait(self.get_driver(), self.explicit_timeout).until(
             ec.element_to_be_clickable(webelement)
         )
 
     def wait_until_not_present(self, webelement:WebElement):
-        return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
+        return WebDriverWait(self.get_driver(), self.explicit_timeout).until(
             self.__element_not_present(webelement)
         )
 
     def wait_until_not_visible(self, webelement:WebElement):
-        return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
+        return WebDriverWait(self.get_driver(), self.explicit_timeout).until(
             ec.invisibility_of_element(webelement)
         )
 
     def wait_for_staleness_of(self, webelement:WebElement):
-        return WebDriverWait(self.get_driver(), self.__explicit_timeout).until(
+        return WebDriverWait(self.get_driver(), self.explicit_timeout).until(
             ec.staleness_of(webelement)
         )
     
@@ -220,8 +216,8 @@ class PageObject():
         loc = loc = self.__get_locator(class_name, css, id, name, link_text, partial_link_text, tag, xpath)
 
         try:
-            WebDriverWait(self.get_driver(), self.__timeout).until(ec.presence_of_element_located(loc))
-            WebDriverWait(self.get_driver(), self.__timeout).until(ec.visibility_of_element_located(loc))
+            WebDriverWait(self.get_driver(), self.timeout).until(ec.presence_of_element_located(loc))
+            WebDriverWait(self.get_driver(), self.timeout).until(ec.visibility_of_element_located(loc))
         except (StaleElementReferenceException, NoSuchElementException, TimeoutException) as err:
             raise Exception(
                     f"{type(err).__name__} occured when trying to locate element"
@@ -235,8 +231,8 @@ class PageObject():
         loc = self.__get_locator(class_name, css, id, name, link_text, partial_link_text, tag, xpath)
 
         try:
-            WebDriverWait(self.get_driver(), self.__timeout).until(ec.presence_of_element_located(loc))
-            WebDriverWait(self.get_driver(), self.__timeout).until(ec.visibility_of_element_located(loc))
+            WebDriverWait(self.get_driver(), self.timeout).until(ec.presence_of_element_located(loc))
+            WebDriverWait(self.get_driver(), self.timeout).until(ec.visibility_of_element_located(loc))
         except (StaleElementReferenceException, NoSuchElementException, TimeoutException) as err:
             raise Exception(
                     f"{type(err).__name__} occured when trying to locate element"
