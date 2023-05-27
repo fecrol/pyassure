@@ -19,6 +19,7 @@ class Webdriver:
         self.__possible_headless_values = ["true", "false"]
 
         self.__driver = None
+        self.__start()
     
     def __set_driver_options(self, driver_type:str):
         """
@@ -107,7 +108,6 @@ class Webdriver:
         if baseUrl is None:
             raise Exception("No url provided. Please add a baseUrl field in pyassure.config.json, or pass a url as a parameter to the open() method!")
 
-        self.__start()
         self.__driver.get(baseUrl)
     
     def quit(self):
@@ -119,5 +119,3 @@ class Webdriver:
     
     def get_current_url(self):
         return self.__driver.current_url
-
-driver = Webdriver()

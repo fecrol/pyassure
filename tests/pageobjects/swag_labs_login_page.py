@@ -1,13 +1,16 @@
 from pyassure.pagefactory import PageObject
 
 class SwagLabsLoginPage(PageObject):
-
+    
     find_by = {
         "username_field": ("id", "user-name"),
         "password_field": ("id", "password"),
         "login_btn": ("css", "input[data-test='login-button']"),
         "credentials": ("id", "login_credentials")
     }
+
+    def __init__(self, driver):
+        self.driver = driver
 
     def input_username(self, username:str):
         self.wait_until_clickable(self.username_field)
